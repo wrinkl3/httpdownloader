@@ -17,18 +17,35 @@ void error(const char *err){
     exit(0); 
 }
 
-void parse_response(char *response){
+//checks the given line for links
+void check_for_links(char *line){
+	int i, size;
+	size = strlen(line);
+	for(i = 0; i<size; i++){
+		if(strncmp(line+i, "href", 4) == 0){
+
+		}
+	} 
+}
+
+void parse_response(char *response){	//TODO: write to file here
 	//discard the metadata
-	char *tok;
-	int i = 0;
-	tok = strtok(response, "\r\n");
-	while(tok != NULL){
-		i++;
-		printf("a\n");
+	char buff[sizeof(response)], *tok;
+	tok = strtok(response, "\n");
+	while(tok != NULL){		//go through the tokens until the html begins
 		printf("%s\n", tok);
-		tok = strtok(NULL, "\r\n");
+		if(strncmp("<!", tok, 2) == 0)	
+			break;
+		tok = strtok(NULL, "\n");
 	}
-	printf("%d\n", i);
+	//now for the file
+	strcpy(buff, "");	//init the buffer
+	while( tok != NULL){
+		check_for_links(tok);
+		strcat(buff, tok);
+		strcat(buff, "\n");
+		strtok(NULL, "\n");
+	}
 }
 
 //uses an existing socket connection to download the http file
